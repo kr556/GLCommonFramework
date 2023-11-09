@@ -1,0 +1,62 @@
+plugins {
+    id 'java'
+}
+
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation(fileTree('C:/.program/java/.libraries/lwjgl-release-3.3.1-custom/lwjgl-natives-windows.jar'))
+    implementation(fileTree('C:/.program/java/.libraries/lwjgl-release-3.3.1-custom/lwjgl-opengles-javadoc.jar'))
+    implementation(fileTree('C:/.program/java/.libraries/lwjgl-release-3.3.1-custom/lwjgl-opengles-sources.jar'))
+    implementation(fileTree('C:/.program/java/.libraries/lwjgl-release-3.3.1-custom/lwjgl-opengles.jar'))
+    implementation(fileTree('C:/.program/java/.libraries/lwjgl-release-3.3.1-custom/lwjgl-opengles-natives-windows.jar'))
+    implementation(fileTree('C:/.program/java/.libraries/lwjgl-release-3.3.1-custom/lwjgl-opengl.jar'))
+    implementation(fileTree('C:/.program/java/.libraries/lwjgl-release-3.3.1-custom/lwjgl-opengl-javadoc.jar'))
+    implementation(fileTree('C:/.program/java/.libraries/lwjgl-release-3.3.1-custom/lwjgl-opengl-sources.jar'))
+    implementation(fileTree('C:/.program/java/.libraries/lwjgl-release-3.3.1-custom/lwjgl-openvr.jar'))
+    implementation(fileTree('C:/.program/java/.libraries/lwjgl-release-3.3.1-custom/lwjgl-openvr-javadoc.jar'))
+    implementation(fileTree('C:/.program/java/.libraries/lwjgl-release-3.3.1-custom/lwjgl-openvr-natives-windows.jar'))
+    implementation(fileTree('C:/.program/java/.libraries/lwjgl-release-3.3.1-custom/lwjgl-openvr-sources.jar'))
+    implementation(fileTree('C:/.program/java/.libraries/lwjgl-release-3.3.1-custom/lwjgl-stb.jar'))
+    implementation(fileTree('C:/.program/java/.libraries/lwjgl-release-3.3.1-custom/lwjgl-stb-javadoc.jar'))
+    implementation(fileTree('C:/.program/java/.libraries/lwjgl-release-3.3.1-custom/lwjgl-stb-natives-windows.jar'))
+    implementation(fileTree('C:/.program/java/.libraries/lwjgl-release-3.3.1-custom/lwjgl-stb-sources.jar'))
+    implementation(fileTree('C:/.program/java/.libraries/lwjgl-release-3.3.1-custom/lwjgl-glfw.jar'))
+    implementation(fileTree('C:/.program/java/.libraries/lwjgl-release-3.3.1-custom/lwjgl-glfw-javadoc.jar'))
+    implementation(fileTree('C:/.program/java/.libraries/lwjgl-release-3.3.1-custom/lwjgl-glfw-natives-windows.jar'))
+    implementation(fileTree('C:/.program/java/.libraries/lwjgl-release-3.3.1-custom/lwjgl-glfw-sources.jar'))
+    implementation(fileTree('C:/.program/java/.libraries/lwjgl-release-3.3.1-custom/lwjgl-jawt.jar'))
+    implementation(fileTree('C:/.program/java/.libraries/lwjgl-release-3.3.1-custom/lwjgl-jawt-javadoc.jar'))
+    implementation(fileTree('C:/.program/java/.libraries/lwjgl-release-3.3.1-custom/lwjgl-jawt-sources.jar'))
+    implementation(fileTree('C:/.program/java/.libraries/lwjgl-release-3.3.1-custom/lwjgl-nanovg.jar'))
+    implementation(fileTree('C:/.program/java/.libraries/lwjgl-release-3.3.1-custom/lwjgl-nanovg-javadoc.jar'))
+    implementation(fileTree('C:/.program/java/.libraries/lwjgl-release-3.3.1-custom/lwjgl-nanovg-natives-windows.jar'))
+    implementation(fileTree('C:/.program/java/.libraries/lwjgl-release-3.3.1-custom/lwjgl-nanovg-sources.jar'))
+    implementation(fileTree('C:/.program/java/.libraries/lwjgl-release-3.3.1-custom/lwjgl-openal.jar'))
+    implementation(fileTree('C:/.program/java/.libraries/lwjgl-release-3.3.1-custom/lwjgl-openal-javadoc.jar'))
+    implementation(fileTree('C:/.program/java/.libraries/lwjgl-release-3.3.1-custom/lwjgl-openal-natives-windows.jar'))
+    implementation(fileTree('C:/.program/java/.libraries/lwjgl-release-3.3.1-custom/lwjgl-openal-sources.jar'))
+    implementation(fileTree('C:/.program/java/.libraries/lwjgl-release-3.3.1-custom/lwjgl-opencl.jar'))
+    implementation(fileTree('C:/.program/java/.libraries/lwjgl-release-3.3.1-custom/lwjgl-opencl-javadoc.jar'))
+    implementation(fileTree('C:/.program/java/.libraries/lwjgl-release-3.3.1-custom/lwjgl-opencl-sources.jar'))
+    implementation(fileTree('C:/.program/java/.libraries/lwjgl-release-3.3.1-custom/lwjgl-opengl-natives-windows.jar'))
+    implementation(fileTree('C:/.program/java/.libraries/lwjgl-release-3.3.1-custom/lwjgl.jar'))
+    implementation(fileTree('C:/.program/java/.libraries/lwjgl-release-3.3.1-custom/lwjgl-javadoc.jar'))
+    implementation(fileTree('C:/.program/java/.libraries/lwjgl-release-3.3.1-custom/lwjgl-sources.jar'))
+    implementation(fileTree('C:/.program/java/.libraries/jackson/jackson-core-2.13.3.jar'))
+    implementation(fileTree('C:/.program/java/.libraries/jackson/jackson-databind-2.13.3.jar'))
+    implementation(fileTree('C:/.program/java/.libraries/jackson/jackson-annotations-2.13.3.jar'))
+    implementation(fileTree('C:/.program/java/.libraries/vecmath/vecmath-mine/vector-math/out/artifacts/liner_math_vanilla_1_0_0/liner-math-vanilla-1.0.0.jar'))
+    implementation 'org.jetbrains:annotations:24.0.0'
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
+}
