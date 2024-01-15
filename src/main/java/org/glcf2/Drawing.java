@@ -1,9 +1,9 @@
 package org.glcf2;
 
-public interface Drawing<R/*This type*/> {
-    R create();
+public interface Drawing {
     void drawing();
 
-    void setShader(ShaderBase shader);
-    void setModel(ArrayModel model);
+    void setShader(Shader shader);
+
+    Shader getShader();
 }

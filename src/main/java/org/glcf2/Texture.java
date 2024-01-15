@@ -1,7 +1,6 @@
 package org.glcf2;
 
-import org.glcf2.globject.GLObjct;
-import org.glcf2.globject.VertexBufferObject;
+import org.glcf2.programobject.VBO;
 import org.lwjgl.BufferUtils;
 
 import java.awt.image.BufferedImage;
@@ -11,7 +10,8 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 
-public class Texture extends VertexBufferObject {
+//TODO クラスの抽象化
+public class Texture extends VBO {
     private int width;
     private int height;
 

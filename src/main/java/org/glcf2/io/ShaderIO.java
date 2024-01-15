@@ -32,10 +32,8 @@ public final class ShaderIO {
     }
 
     public static String readFragment(File fileName, ExceptionCatcher<String> ec) {
-        if (!fileName.getPath().substring(3).equals(fragment)) fileName = new File(fileName.getPath() + fragment);
-
         try {
-            return TextIO.read(fileName);
+            return readFragment(fileName);
         } catch (IOException e) {
             if (ec == null) return null;
             return ec.invoke(e);

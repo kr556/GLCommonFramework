@@ -10,6 +10,7 @@ repositories {
 }
 
 dependencies {
+
     implementation(fileTree('C:/.program/java/.libraries/lwjgl-release-3.3.1-custom/lwjgl-natives-windows.jar'))
     implementation(fileTree('C:/.program/java/.libraries/lwjgl-release-3.3.1-custom/lwjgl-opengles-javadoc.jar'))
     implementation(fileTree('C:/.program/java/.libraries/lwjgl-release-3.3.1-custom/lwjgl-opengles-sources.jar'))
@@ -51,7 +52,8 @@ dependencies {
     implementation(fileTree('C:/.program/java/.libraries/jackson/jackson-core-2.13.3.jar'))
     implementation(fileTree('C:/.program/java/.libraries/jackson/jackson-databind-2.13.3.jar'))
     implementation(fileTree('C:/.program/java/.libraries/jackson/jackson-annotations-2.13.3.jar'))
-    implementation(fileTree('C:/.program/java/.libraries/vecmath/vecmath-mine/vector-math/out/artifacts/liner_math_vanilla_1_0_0/liner-math-vanilla-1.0.0.jar'))
+    implementation(fileTree('C:\\.program\\java\\.libraries\\vecmath\\vecmath-mine\\vector-math\\out\\artifacts\\liner_math_vanilla_2_2_0_release\\liner-math-vanilla-2.2.0-release.jar'))
+    implementation(fileTree('C:/.program/java/.libraries/vecmath/vecmath-mine/vector-math-annotaion/out/artifacts/vector_math_annotaion_1_0_0/vector-math-annotaion-1.0.0.jar'))
     implementation 'org.jetbrains:annotations:24.0.0'
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
