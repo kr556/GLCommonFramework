@@ -2,6 +2,7 @@ package org.glcf2.component;
 
 import org.glcf2.Drawing;
 import org.glcf2.component.glcomponent.GLWindow;
+import org.glcf2.component.glcomponent.UniformSetter;
 import org.glcf2.models.Model;
 import org.linear.main.vector.Vector2d;
 import org.linear.main.vector.Vector2i;
@@ -51,4 +52,6 @@ public non-sealed interface Component extends Drawing, MouseActionInvoker {
     Model getModel();
 
     Window getRoot();
+
+    void setUniform(UniformSetter set);
 }

@@ -1,5 +1,6 @@
 package org.glcf2.vertex;
 
+import org.glcf2.programobject.VBO;
 import org.linear.main.matrix.Matrix4f;
 import org.linear.main.vector.Vector3d;
 import org.linear.main.vector.Vector4f;
@@ -11,20 +12,19 @@ import java.util.List;
 public final class ArrayModelFactory {
     private ArrayModelFactory() {}
 
-    public static ArrayModel<Matrix4f, Vector4f> createModel(Vector4f[] vertices) {
-        ArrayModelImpl4mf4vf re = new ArrayModelImpl4mf4vf();
-        re.addVertices(vertices);
+    public static ArrayModel<Matrix4f, Vector4f> createVertexModel(Vector4f[] verticies) {
+        ArrayModel4mf4vf re = new ArrayModel4mf4vf();
+        re.addVertices(verticies);
         return re;
     }
 
-    static class ArrayModelImpl4mf4vf implements ArrayModel<Matrix4f, Vector4f>, Cloneable {
+    static class ArrayModel4mf4vf extends ArrayList<Vector4f> implements ArrayModel<Matrix4f, Vector4f>, Cloneable {
         private Vector4f anchor;
-        private List<Vector4f> vertices;
         private Matrix4f mat;
 
-        private ArrayModelImpl4mf4vf() {
+        private ArrayModel4mf4vf() {
+            super();
             anchor = new Vector4f();
-            vertices = new ArrayList<>();
             mat = new Matrix4f(Matrix4f.DIAGONAL);
         }
 
@@ -137,42 +137,29 @@ public final class ArrayModelFactory {
 
         @Override
         public void addVertex(Vector4f vertex) {
-            vertices.add(vertex);
+            this.add(vertex);
         }
 
         @Override
         public void setVertex(int index, Vector4f vertex) {
-            vertices.set(index, vertex);
+            this.set(index, vertex);
         }
 
         @Override
-        public void addVertices(Vector4f[] vertices) {
-            this.vertices.addAll(Arrays.asList(vertices));
+        public void addVertices(Vector4f[] verticies) {
+            this.addAll(Arrays.asList(verticies));
         }
 
         @Override
         public void set(ArrayModel<Matrix4f, Vector4f> copy) {
-            vertices.clear();
-            vertices.addAll(copy.getVerticiesList());
+            this.clear();
+            this.addAll(copy.getVerticiesList());
         }
 
         @Override
-        public void setVertices(int start, Vector4f[] vertices) {
-            for (int i = 0, len = vertices.length; i < len; i++) {
-                this.vertices.set(i + start, vertices[i]);
-            }
-        }
-
-        @Override
-        public void remove(int index) {
-            vertices.remove(index);
-        }
-
-        @Override
-        public void removes(int start, int offset) {
-            final int size = offset - start;
-            for (int i = 0; i < size; i++) {
-                vertices.remove(start);
+        public void setVertices(int start, Vector4f[] verticies) {
+            for (int i = 0, len = verticies.length; i < len; i++) {
+                this.set(i + start, verticies[i]);
             }
         }
 
@@ -188,14 +175,14 @@ public final class ArrayModelFactory {
 
         @Override
         public Vector4f getVertex(int index) {
-            return vertices.get(index);
+            return this.get(index);
         }
 
         @Override
         public Vector4f[] getVerticies(int start, int offset) {
             Vector4f[] re = new Vector4f[offset - start];
             for (int i = 0, len = re.length; i < len; i++) {
-                re[i] = vertices.get(start + i);
+                re[i] = this.get(start + i);
             }
             return re;
         }
@@ -204,19 +191,14 @@ public final class ArrayModelFactory {
         public List<Vector4f> getVerticiesList(int start, int offset) {
             List<Vector4f> re = new ArrayList<>(Arrays.asList(new Vector4f[offset - start]));
             for (int i = 0, len = re.size(); i < len; i++) {
-                re.set(i, vertices.get(start + i));
+                re.set(i, this.get(start + i));
             }
             return re;
         }
 
         @Override
-        public int size() {
-            return vertices.size();
-        }
-
-        @Override
         public void transformation() {
-            vertices.forEach(mat::transformation);
+            this.forEach(mat::transformation);
         }
 
         @Override
@@ -224,19 +206,19 @@ public final class ArrayModelFactory {
             Vector3d[] vs = new Vector3d[size()];
             Vector4f tmp;
             for (int i = 0, len = vs.length; i < len; i++) {
-                tmp = vertices.get(i);
+                tmp = this.get(i);
                 vs[i] = new Vector3d(tmp.x, tmp.y, tmp.z);
             }
             return vs;
         }
 
         @Override
-        public ArrayModelImpl4mf4vf clone() {
-            try {
-                return (ArrayModelImpl4mf4vf) super.clone();
-            } catch (CloneNotSupportedException e) {
-                throw new RuntimeException("Failed to clone.");
-            }
+        public ArrayModel4mf4vf clone() {
+            ArrayModel4mf4vf re = (ArrayModel4mf4vf) super.clone();
+            re.anchor = this.anchor.clone();
+            re.mat = this.mat.clone();
+
+            return re;
         }
     }
 }

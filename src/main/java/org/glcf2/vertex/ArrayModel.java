@@ -7,7 +7,7 @@ import org.linear.main.vector.FloatVector;
 
 import java.util.List;
 
-public interface ArrayModel<MAT extends FloatMatrix<MAT, MAT>, VEC extends FloatVector<VEC>> extends Cloneable {
+public interface ArrayModel<MAT extends FloatMatrix<MAT, MAT>, VEC extends FloatVector<VEC>> extends Cloneable, List<VEC> {
     /**
      * このオブジェクトを任意の軸を中心に回転します。{@link ArrayModel#setAnchor}によって回転の中心を指定できます。
      * @param radian radian
@@ -168,18 +168,6 @@ public interface ArrayModel<MAT extends FloatMatrix<MAT, MAT>, VEC extends Float
      */
     void setVertices(int start, VEC[] vertices);
 
-    /**
-     * 指定した頂点を削除します。
-     * @param index index
-     */
-    void remove(int index);
-
-    /**
-     * 指定した頂点をまとめて削除します。
-     * @param start from this pos
-     * @param offset up to this pos
-     */
-    void removes(int start, int offset);
 
     MAT getMatrix();
 
@@ -274,4 +262,6 @@ public interface ArrayModel<MAT extends FloatMatrix<MAT, MAT>, VEC extends Float
      * @return vectors
      */
     DoubleVector<?>[] cutArray();
+
+    ArrayModel<MAT, VEC> clone();
 }

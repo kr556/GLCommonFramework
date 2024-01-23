@@ -1,8 +1,9 @@
 package org.glcf2.shaders;
 
 import org.glcf2.Shader;
-import org.glcf2.programobject.attrib.AttribObjectArray;
-import org.glcf2.io.ShaderIO;
+import org.glcf2.programobject.attrib.Attribute;
+import org.glcf2.programobject.attrib.AttributeArray;
+import org.glcf2.io.ShaderReader;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -21,8 +22,12 @@ public class GLSL extends Shader {
     private int program;
     private int vertexId;
     private int fragmentId;
-    private List<AttribObjectArray> attribs = new ArrayList<>();
-    private List<String> names = new ArrayList<>();
+    private List<Attribute> attributes = new ArrayList<>();
+    private List<String> attributeNames = new ArrayList<>();
+    private String fSrc;
+    private String vSrc;
+
+    private boolean compiled;
 
     /**
      * 属性追加後に{@link GLSL#compile()}でコンパイルする必要があります。
@@ -30,8 +35,8 @@ public class GLSL extends Shader {
      */
     public static GLSL readFileCostumAttribute(File filaName) {
         return new GLSL(
-                ShaderIO.readVertex((filaName), e -> {throw new RuntimeException("vertex file not found: shader/glsl/" + filaName);}),
-                ShaderIO.readFragment((filaName), e -> {throw new RuntimeException("fragment file not found: shader/glsl/" + filaName);}));
+                ShaderReader.readVertex((filaName), e -> {throw new RuntimeException("vertex file not found: shader\\glsl\\" + filaName + ".vert");}),
+                ShaderReader.readFragment((filaName), e -> {throw new RuntimeException("fragment file not found: shader\\glsl\\" + filaName + ".frag");}));
     }
 
     /**
@@ -50,8 +55,8 @@ public class GLSL extends Shader {
      */
     public static GLSL readCostumAttribute(String filaName) {
         return new GLSL(
-                ShaderIO.readVertex(filaName, e -> {throw new RuntimeException("vertex file not found: shader/glsl/" + filaName);}),
-                ShaderIO.readFragment(filaName, e -> {throw new RuntimeException("fragment file not found: shader/glsl/" + filaName);}));
+                ShaderReader.readVertex(filaName, e -> {throw new RuntimeException("vertex file not found: shader\\glsl\\" + filaName + ".vert");}),
+                ShaderReader.readFragment(filaName, e -> {throw new RuntimeException("fragment file not found: shader\\glsl\\" + filaName + ".frag");}));
     }
 
     /**
@@ -65,6 +70,9 @@ public class GLSL extends Shader {
     }
 
     public GLSL(String vSrc, String fSrc) {
+        this.vSrc = vSrc;
+        this.fSrc = fSrc;
+
         this.program = glCreateProgram();
 
         this.vertexId = glCreateShader(GL_VERTEX_SHADER);
@@ -91,12 +99,12 @@ public class GLSL extends Shader {
         glAttachShader(program, vertexId);
         glAttachShader(program, fragmentId);
 
-        addAttribute(VERTEX ,3, GL_FLOAT, false, 0, AttribObjectArray.VERTICES);
-        addAttribute(COLOR ,4, GL_FLOAT, false, 0, AttribObjectArray.COLORS);
-        addAttribute(TEXTURE,4, GL_FLOAT, false, 0, AttribObjectArray.TEXTURES);
+        addAttribute(VERTEX ,3, GL_FLOAT, false, 0, AttributeArray.VERTICES);
+        addAttribute(COLOR ,4, GL_FLOAT, false, 0, AttributeArray.COLORS);
+        addAttribute(TEXTURE,4, GL_FLOAT, false, 0, AttributeArray.TEXTURES);
 
-        for (int i = 0; i < attribs.size(); i++) {
-            attribs.get(i).bindProgram(program, names.get(i));
+        for (int i = 0; i < attributes.size(); i++) {
+            attributes.get(i).bindProgram(program, attributeNames.get(i));
         }
 
         glLinkProgram(program);
@@ -112,15 +120,17 @@ public class GLSL extends Shader {
                                glGetProgramInfoLog(program));
             System.exit(1);
         }
+
+        compiled = true;
     }
 
     public void addAttribute(int size, int type, boolean normalized, int stride, String name) {
-        addAttribute(attribs.size(), size, type, normalized, stride, name);
+        addAttribute(attributes.size(), size, type, normalized, stride, name);
     }
 
     private void addAttribute(int id, int size, int type, boolean normalized, int stride, String name) {
-        attribs.add(id, new AttribObjectArray(attribs.size(), size, type, normalized, stride));
-        names.add(id, name);
+        attributes.add(id, new AttributeArray(attributes.size(), size, type, normalized, stride));
+        attributeNames.add(id, name);
     }
 
     @Override
@@ -144,7 +154,22 @@ public class GLSL extends Shader {
     }
 
     @Override
-    public List<AttribObjectArray> getAttibs() {
-        return attribs;
+    public List<Attribute> getAttibs() {
+        return attributes;
+    }
+
+    @Override
+    public boolean isComliled() {
+        return compiled;
+    }
+
+    @Override
+    public Shader clone() {
+        GLSL re = new GLSL(vSrc, fSrc);
+        re.attributes = (List<Attribute>) ((ArrayList<Attribute>) this.attributes).clone();
+        re.attributeNames = (List<String>) ((ArrayList<String>) this.attributeNames).clone();
+
+        if (!compiled) re.compile();
+        return re;
     }
 }

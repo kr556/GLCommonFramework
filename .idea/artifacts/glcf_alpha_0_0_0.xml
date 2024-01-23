@@ -1,0 +1,52 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="glcf-alpha-0.0.0">
+    <output-path>$PROJECT_DIR$/out/artifacts/glcf_alpha_0_0_0</output-path>
+    <root id="archive" name="glcf-alpha-0.0.0.jar">
+      <element id="module-output" name="GLCommonFramework.main" />
+      <element id="file-copy" path="$PROJECT_DIR$/../.libraries/lwjgl-release-3.3.1-custom/lwjgl-natives-windows.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../.libraries/lwjgl-release-3.3.1-custom/lwjgl-opengles-javadoc.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../.libraries/lwjgl-release-3.3.1-custom/lwjgl-opengles-sources.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../.libraries/lwjgl-release-3.3.1-custom/lwjgl-opengles.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../.libraries/lwjgl-release-3.3.1-custom/lwjgl-opengles-natives-windows.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../.libraries/lwjgl-release-3.3.1-custom/lwjgl-opengl.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../.libraries/lwjgl-release-3.3.1-custom/lwjgl-opengl-javadoc.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../.libraries/lwjgl-release-3.3.1-custom/lwjgl-opengl-sources.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../.libraries/lwjgl-release-3.3.1-custom/lwjgl-openvr.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../.libraries/lwjgl-release-3.3.1-custom/lwjgl-openvr-javadoc.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../.libraries/lwjgl-release-3.3.1-custom/lwjgl-openvr-natives-windows.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../.libraries/lwjgl-release-3.3.1-custom/lwjgl-openvr-sources.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../.libraries/lwjgl-release-3.3.1-custom/lwjgl-stb.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../.libraries/lwjgl-release-3.3.1-custom/lwjgl-stb-javadoc.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../.libraries/lwjgl-release-3.3.1-custom/lwjgl-stb-natives-windows.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../.libraries/lwjgl-release-3.3.1-custom/lwjgl-stb-sources.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../.libraries/lwjgl-release-3.3.1-custom/lwjgl-glfw.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../.libraries/lwjgl-release-3.3.1-custom/lwjgl-glfw-javadoc.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../.libraries/lwjgl-release-3.3.1-custom/lwjgl-glfw-natives-windows.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../.libraries/lwjgl-release-3.3.1-custom/lwjgl-glfw-sources.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../.libraries/lwjgl-release-3.3.1-custom/lwjgl-jawt.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../.libraries/lwjgl-release-3.3.1-custom/lwjgl-jawt-javadoc.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../.libraries/lwjgl-release-3.3.1-custom/lwjgl-jawt-sources.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../.libraries/lwjgl-release-3.3.1-custom/lwjgl-nanovg.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../.libraries/lwjgl-release-3.3.1-custom/lwjgl-nanovg-javadoc.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../.libraries/lwjgl-release-3.3.1-custom/lwjgl-nanovg-natives-windows.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../.libraries/lwjgl-release-3.3.1-custom/lwjgl-nanovg-sources.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../.libraries/lwjgl-release-3.3.1-custom/lwjgl-openal.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../.libraries/lwjgl-release-3.3.1-custom/lwjgl-openal-javadoc.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../.libraries/lwjgl-release-3.3.1-custom/lwjgl-openal-natives-windows.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../.libraries/lwjgl-release-3.3.1-custom/lwjgl-openal-sources.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../.libraries/lwjgl-release-3.3.1-custom/lwjgl-opencl.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../.libraries/lwjgl-release-3.3.1-custom/lwjgl-opencl-javadoc.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../.libraries/lwjgl-release-3.3.1-custom/lwjgl-opencl-sources.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../.libraries/lwjgl-release-3.3.1-custom/lwjgl-opengl-natives-windows.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../.libraries/lwjgl-release-3.3.1-custom/lwjgl.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../.libraries/lwjgl-release-3.3.1-custom/lwjgl-javadoc.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../.libraries/lwjgl-release-3.3.1-custom/lwjgl-sources.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../.libraries/jackson/jackson-core-2.13.3.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../.libraries/jackson/jackson-databind-2.13.3.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../.libraries/jackson/jackson-annotations-2.13.3.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../.libraries/vecmath/vecmath-mine/vector-math/out/artifacts/liner_math_vanilla_2_2_0_release/liner-math-vanilla-2.2.0-release.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../.libraries/vecmath/vecmath-mine/vector-math-annotaion/out/artifacts/vector_math_annotaion_1_0_0/vector-math-annotaion-1.0.0.jar" />
+      <element id="library" level="project" name="Gradle: org.jetbrains:annotations:24.0.0" />
+    </root>
+  </artifact>
+</component>

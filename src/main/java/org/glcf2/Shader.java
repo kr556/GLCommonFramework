@@ -1,6 +1,6 @@
 package org.glcf2;
 
-import org.glcf2.programobject.attrib.AttribObjectArray;
+import org.glcf2.programobject.attrib.Attribute;
 import org.linear.main.matrix.Matrix;
 import org.linear.main.vector.*;
 import org.lwjgl.BufferUtils;
@@ -12,7 +12,7 @@ import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL20.glUniform1i;
 
 //TODO 抽象化
-public abstract class Shader {
+public abstract class Shader implements Cloneable {
     public abstract void compile();
 
     public abstract void bind();
@@ -23,7 +23,9 @@ public abstract class Shader {
 
     public abstract int getFragmentId();
 
-    public abstract List<AttribObjectArray> getAttibs();
+    public abstract List<Attribute> getAttibs();
+
+    public abstract boolean isComliled();
 
     public void setUniform(String valueName, int value) {
         int location = glGetUniformLocation(getProgram(), valueName);
@@ -128,6 +130,15 @@ public abstract class Shader {
         if (location != -1) {
             glUniform1i(location, 0);
             sampler.bind();
+        }
+    }
+
+    @Override
+    public Shader clone() {
+        try {
+            return (Shader) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
         }
     }
 }

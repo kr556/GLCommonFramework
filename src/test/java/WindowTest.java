@@ -1,7 +1,10 @@
+import org.glcf2.FragUtil32;
 import org.glcf2.Texture;
 import org.glcf2.UniformNames;
 import org.glcf2.component.Mouse;
+import org.glcf2.component.MouseEvent;
 import org.glcf2.component.glcomponent.GLComponentFactory;
+import org.glcf2.component.glcomponent.GLEventID;
 import org.glcf2.component.glcomponent.GLWindow;
 import org.glcf2.programobject.IBO;
 import org.glcf2.programobject.VBO;
@@ -23,22 +26,24 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class WindowTest {
     private static float size = 0.5f;
+    private static Vector2d mpos = new Vector2d();
+    private static int mfrag = 0;
 
     public static void main(String[] args) {
         GLWindow window = GLComponentFactory.createWindow(GLWindow.DrawingsType.LIST, new Vector2d(0.5, 0.5), "test 2", NULL, NULL, 0);
         window.init();
 
-//        Vector<?, ?>[][] verticies = donut(0.7f, 0.1f, 3, 3);
-        Vector<?, ?>[][] verticies = cube(1);
+        Vector<?, ?>[][] verticies = donut(0.7f, 0.1f, 4096, 512);
+//        Vector<?, ?>[][] verticies = cube(1);
 
-        ArrayModel<Matrix4f, Vector4f> vs = ArrayModelFactory.createModel((Vector4f[]) verticies[0]);
+        ArrayModel<Matrix4f, Vector4f> vs = ArrayModelFactory.createVertexModel((Vector4f[]) verticies[0]);
         var pos =       VBO.create(vs.getVerticies(), 3);
         var col =       VBO.create((Vector4f[])verticies[1], 4);
         var idx =       IBO.create((Vector3i[]) verticies[2], 3);
 
         var normals =   VBO.create((Vector4f[]) verticies[3], 3);
 
-        GLSL mprg = GLSL.read("glcf/component/glsl/button");
+        GLSL mprg = GLSL.readFile(new File("test"));
 
         BufferedImage texImg = ImageReader.read(new File("その他/img_1.png"), e -> null);
         Texture texture = new Texture(texImg);
@@ -57,7 +62,16 @@ public class WindowTest {
         StringBuilder log = new StringBuilder();
 
         window.addDrawing(m);
-        window.addDrawing(g);
+//        window.addDrawing(g);
+
+        window.setUniform((w, t, ml) -> {
+            mprg.setUniform(UniformNames.TIME, (float) t);
+            mprg.setUniformm(UniformNames.MAT4, new Matrix4f(Matrix4f.DIAGONAL)
+                    .scale(size)
+                    .translate((float) mpos.x * 2, (float) mpos.y * 2, 0)
+                    .rotate(1f * t, new Vector4f(1, 1, 1, 0))
+                    .toNewArray());
+        });
 
         window.setFrameAction((l, t) -> {
             Mouse me = window.getEvent().getMouse();
@@ -66,13 +80,16 @@ public class WindowTest {
                 if (me.scrolled()) {
                     size -= (float) (pow(size * 0.7, 2) * me.getScrollY());
                 }
-            }
 
-            mprg.setUniform(UniformNames.TIME, (float) t);
-            mprg.setUniformm(UniformNames.MAT4, new Matrix4f(Matrix4f.DIAGONAL)
-                    .scale(size)
-                    .rotate(0.1f * t, new Vector4f(1, 1, 1, 0))
-                    .toNewArray());
+                if (me.moved() && FragUtil32.fragIs(mfrag, MouseEvent.MOUSE_PRESS)) {
+                    me.getEvent();
+                    mpos.add(me.getDelta());
+                    mfrag = FragUtil32.fragSetTrue(mfrag, MouseEvent.MOUSE_PRESS);
+                }
+
+                if (me.getEvent() == GLEventID.event.press()) mfrag = FragUtil32.fragSetTrue(mfrag, MouseEvent.MOUSE_PRESS);
+                if (me.getEvent() == GLEventID.event.release()) mfrag = FragUtil32.fragSetFalse(mfrag, MouseEvent.MOUSE_PRESS);
+            }
         });
 
         window.run();
@@ -251,7 +268,7 @@ public class WindowTest {
     }
 
     public static GLVBOModel ground(float h, float size) {
-        var arrM = ArrayModelFactory.createModel(new Vector4f[]{
+        var arrM = ArrayModelFactory.createVertexModel(new Vector4f[]{
                 new Vector4f(-size, h, 0, 1),
                 new Vector4f(size, h, 0, 1),
                 new Vector4f(size + 0.1f, h, size * 10, 1),

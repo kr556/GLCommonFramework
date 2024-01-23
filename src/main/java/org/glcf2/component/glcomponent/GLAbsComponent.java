@@ -11,6 +11,7 @@ import org.glcf2.models.Model;
 import org.glcf2.models.GLVBOModel;
 import org.glcf2.shaders.GLSL;
 import org.glcf2.vertex.ArrayModelFactory;
+import org.linear.main.matrix.AbsMatrix;
 import org.linear.main.matrix.Matrix4f;
 import org.linear.main.vector.Vector2d;
 import org.linear.main.vector.Vector2i;
@@ -29,7 +30,7 @@ import static org.glcf2.component.glcomponent.GLEventID.*;
 //TODO 未実装
 public abstract class GLAbsComponent implements Component, MouseEvent {
     static {
-        var arrM = ArrayModelFactory.createModel(new Vector4f[]{
+        var arrM = ArrayModelFactory.createVertexModel(new Vector4f[]{
                 new Vector4f(1, 1, 1, 1),
                 new Vector4f(1, 0, 1, 1),
                 new Vector4f(0, 0, 1, 1),
@@ -41,7 +42,7 @@ public abstract class GLAbsComponent implements Component, MouseEvent {
                 new Vector3i(2, 3, 0)
         }, 3);
 
-        GLVBOModel re = new GLVBOModel(VBO.create(arrM.getVerticies(), 3), idx, GLSL.read("glcf/component/glsl/button"));
+        GLVBOModel re = new GLVBOModel(VBO.create(arrM.getVerticies(), 3), idx, null);
         re.setColor(VBO.create(new Vector4f[]{
                 new Vector4f(0, 0, 0, 1),
                 new Vector4f(0, 0, 0, 1),
@@ -52,23 +53,25 @@ public abstract class GLAbsComponent implements Component, MouseEvent {
         rec = re;
     }
 
-    private static final Model rec;
+    protected static final Model rec;
 
     private GLWindow root;
-
     private Component parent;
+
+    private int layer;
     private String name;
-    private Vector2d size;
-    private Vector2d pos;
     private Vector2d pivot;
     private Vector4f background;
     private List<Component> components = new ArrayList<>();
     private Model model;
-    private Mouse mouse;
-    private Keybord keybord;
-    private Joystick joystick;
-    private int layer;
+    private UniformSetter uniSet;
+    protected Vector2d pos;
+    protected Vector2d size;
+    protected Mouse mouse;
+    protected Keybord keybord;
+    protected Joystick joystick;
 
+    private transient TransMat<Matrix4f> transMat = (w, t) -> Matrix4f.DIAGONAL;
     private transient Vector2d tmp2v = new Vector2d();
     private transient Matrix4f tmp4m = Matrix4f.DIAGONAL.clone();
     private transient int mouseFrag;
@@ -89,31 +92,22 @@ public abstract class GLAbsComponent implements Component, MouseEvent {
         this.keybord = root.getEvent().getKeybord();
         this.joystick = root.getEvent().getJoystick();
         this.name = "";
-
-        this.model.getShader().setUniform(UniformNames.LAYER, layer);
-    }
-
-    @Override
-    public boolean mouseHit() {
-        Vector2d p = mouse.getPos();
-
-        if (p.isNaN()) return false;
-
-        return (p.x >= pos.x && p.x <= pos.x + size.x) &&
-               (p.y >= pos.y && p.y <= pos.y + size.y);
     }
 
     //FIXME レイヤーが何故か働かない
     @Override
     public void drawing() {
+        model.getShader().setUniform(UniformNames.LAYER, layer);
+
         tmp4m.set(Matrix4f.DIAGONAL);
 
-        tmp4m.translate((float) pos.x, (float) pos.y, -(layer * 0.1f) * Float.MIN_VALUE);
+        tmp4m.translate((float) pos.x, (float) pos.y, -layer * Float.MIN_VALUE);
 //        System.out.printf("%s : %d : %54.50f\n", name, layer, -(root.maxLayer - layer) * Float.MIN_VALUE);
 
         tmp4m.scale((float) size.x, (float) size.y, 1);
+        tmp4m.mulR(transMat.getMat(root.getWindow(), root.getTime()));
 
-        model.getShader().setUniformm(UniformNames.MAT4, tmp4m.toNewArray());
+        model.getShader().setUniformm("c_m4in", tmp4m.toNewArray());
         model.getShader().setUniformvf(UniformNames.BACKGROUND, background);
 
         if (model != null) model.drawing();
@@ -219,9 +213,21 @@ public abstract class GLAbsComponent implements Component, MouseEvent {
         return model.getShader();
     }
 
+    public Vector4f getBackground4f() {
+        return background;
+    }
+
+    public Color getBackground() {
+        return new Color(background.x, background.y, background.z, background.w);
+    }
+
+    public int getLayer() {
+        return layer;
+    }
+
     @Override
     public void invokeMouseAction() {
-        if (fragIs(mouseFrag, MOUSE_IN)) { // mouse inside action.
+        if (fragIs(mouseFrag, MOUSE_ENTER)) { // mouse inside action.
             mouseHitting(mouse);
 
             if (mouse.getEvent() == event.press()) { // pressed action.
@@ -237,16 +243,20 @@ public abstract class GLAbsComponent implements Component, MouseEvent {
 
             if (!mouseHit()) {
                 mouseExited(mouse);
-                mouseFrag = fragSetFalse(mouseFrag, MOUSE_IN);
+                mouseFrag = fragSetFalse(mouseFrag, MOUSE_ENTER);
             }
         } else { // outside action.
             if (mouseHit()) { // entered action.
                 mouseEntered(mouse);
-                mouseFrag = fragSetTrue(mouseFrag, MOUSE_IN);
+                mouseFrag = fragSetTrue(mouseFrag, MOUSE_ENTER);
             }
         }
 
         components.forEach(MouseActionInvoker::invokeMouseAction);
+    }
+
+    public void transform(TransMat<Matrix4f> matrix) {
+        transMat = matrix;
     }
 
     public void setBackground(Color color) {
@@ -264,5 +274,14 @@ public abstract class GLAbsComponent implements Component, MouseEvent {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public void setUniform(UniformSetter set) {
+        this.uniSet = set;
+    }
+
+    public interface TransMat<M extends AbsMatrix<?, M, M>> {
+        M getMat(long win, double time);
     }
 }

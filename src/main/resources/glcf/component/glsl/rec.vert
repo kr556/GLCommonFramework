@@ -1,8 +1,9 @@
 #version 120
 
+uniform mat4 c_m4in;
+
 uniform float time;
 uniform mat3 m3in;
-uniform mat4 m4in;
 uniform float frag;
 uniform int key;
 uniform int layer;
@@ -18,5 +19,5 @@ varying vec3 tex_normal;
 
 void main() {
     tex_colors = color;
-    gl_Position = vec4(vertices, 1) * m4in;
+    gl_Position = vec4(vertices, 1) * c_m4in;
 }

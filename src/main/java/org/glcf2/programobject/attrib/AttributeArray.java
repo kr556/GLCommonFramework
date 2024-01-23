@@ -6,14 +6,14 @@ import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.glBindBuffer;
 import static org.lwjgl.opengl.GL20.*;
 
-public final class AttribObjectArray extends AttribObject {
+public final class AttributeArray extends Attribute {
     public static String VERTICES = "vertices";
     public static String TEXTURES = "textures";
     public static String COLORS = "color";
 
     private int size;
 
-    public AttribObjectArray(int id, int size, int type, boolean normalized, int stride) {
+    public AttributeArray(int id, int size, int type, boolean normalized, int stride) {
         super(id, type, normalized, stride);
         this.size = size;
     }

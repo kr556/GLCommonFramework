@@ -11,9 +11,7 @@ import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.BooleanSupplier;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
@@ -23,20 +21,9 @@ import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 public abstract class GLWindow implements Window, Component {
-
-
     public enum DrawingsType {
         LIST,
         ARRAY;
-    }
-    @Override
-    public Shader getShader() {
-        return getModel().getShader();
-    }
-
-    @Override
-    public void setShader(Shader shader) {
-        getModel().setShader(shader);
     }
 
     protected DrawingsType drawingType_;
@@ -54,12 +41,15 @@ public abstract class GLWindow implements Window, Component {
     private FrameAction frameAction;
     private Model windowModel;
     private List<Drawing> drawings = new ArrayList<>();
+    private UniformSetter uniSet;
     int maxLayer;
 
+    private transient int viewSize;
     private transient double fpsGet;
     private transient double runTime;
     private transient Vector2iPointer screenSize;
     private transient Vector2iPointer sizeNow = new Vector2iPointer(0, 0);
+
     {
         java.awt.Dimension d = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
         screenSize = new Vector2iPointer(d.width, d.height);
@@ -67,13 +57,14 @@ public abstract class GLWindow implements Window, Component {
         frameAction = (w, t) -> {};
         swapInterval = 1;
     }
+
     protected GLWindow(Vector2d windowSize, String title, long monitor, long share) {
         GLFWErrorCallback.createPrint(System.err).set();
 
         if (!glfwInit()) throw new IllegalStateException();
 
         glfwDefaultWindowHints();
-        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+        glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
         window = glfwCreateWindow((int) (screenSize.x() * windowSize.x), (int) (screenSize.y() * windowSize.y), title, monitor, share);
@@ -87,11 +78,7 @@ public abstract class GLWindow implements Window, Component {
 
             GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
-            glfwSetWindowPos(
-                    window,
-                    (vidmode.width() - size.x()) / 2,
-                    (vidmode.height() - size.y()) / 2
-            );
+            glfwSetWindowPos(window, (vidmode.width() - size.x()) / 2, (vidmode.height() - size.y()) / 2);
         }
 
         this.pos = new Vector2iPointer();
@@ -147,17 +134,17 @@ public abstract class GLWindow implements Window, Component {
         glEnable(GL_DEPTH_TEST);
 
         frameAction.invoke(window, runTime);
+        if (uniSet != null) uniSet.set(window, runTime, null);
 
         resizeViewPort();
 
-        for (Drawing drawing : getAll()) {
-            if (Objects.nonNull(drawing)) drawing.drawing();
-        }
+        Arrays.stream(getAll()).forEach(Drawing::drawing);
 
         for (Drawing drawing : drawings) {
             if (Objects.nonNull(drawing)) drawing.drawing();
         }
 
+        glEnd();
         glfwSwapBuffers(window);
     }
 
@@ -175,10 +162,10 @@ public abstract class GLWindow implements Window, Component {
     public void resizeViewPort() {
         glfwGetWindowSize(window, sizeNow.x, sizeNow.y);
 
-        int viewSideSize = Math.max(sizeNow.x(), sizeNow.y());
+        viewSize = Math.max(sizeNow.x(), sizeNow.y());
 
-        glViewport((sizeNow.x() - viewSideSize) / 2, (sizeNow.y() - viewSideSize) / 2,
-                viewSideSize, viewSideSize);
+        glViewport((sizeNow.x() - viewSize) / 2, (sizeNow.y() - viewSize) / 2,
+                viewSize, viewSize);
 
 //        viewport = new Vector4i((sizeNow.x() - viewSideSize) / 2, (sizeNow.y() - viewSideSize) / 2,
 //                viewSideSize, viewSideSize);
@@ -286,6 +273,16 @@ public abstract class GLWindow implements Window, Component {
     }
 
     @Override
+    public Shader getShader() {
+        return getModel().getShader();
+    }
+
+    @Override
+    public void setShader(Shader shader) {
+        getModel().setShader(shader);
+    }
+
+    @Override
     public synchronized void setModel(Model model) {
         windowModel = model;
     }
@@ -306,6 +303,11 @@ public abstract class GLWindow implements Window, Component {
 
     public void setFrameAction(FrameAction frameAction) {
         this.frameAction = frameAction;
+    }
+
+    @Override
+    public void setUniform(UniformSetter set) {
+        this.uniSet = set;
     }
 
     private final class EventsFrameFirst implements Events {
@@ -340,6 +342,8 @@ public abstract class GLWindow implements Window, Component {
             return joystick;
         }
         private class MouseImplEFF implements Mouse {
+            private static Vector2d INV_Y = new Vector2d(1, -1);
+//            private static Vector2d INV_X = new Vector2d(-1, 1);
 
             private int btn;
             private int ev;
@@ -347,7 +351,7 @@ public abstract class GLWindow implements Window, Component {
             private boolean invoked = false;
             private Vector2d pos;
             private Vector2d scroll;
-
+            private transient boolean inside;
             private transient Vector2d oldPos = new Vector2d();
             private transient Vector2d oldScroll = new Vector2d();
 
@@ -407,12 +411,12 @@ public abstract class GLWindow implements Window, Component {
 
             @Override
             public Vector2d getPos() {
-                double wx = sizeNow.x();
-                double wy = sizeNow.y();
+                double sx = sizeNow.x();
+                double sy = sizeNow.y();
 
                 Vector2d re = pos.clone();
-                re.x = (re.x - wx / 2) / wx * 2;
-                re.y = ((wy - re.y) - wy / 2) / wy * 2;
+                re.x = (re.x - sx / 2) / viewSize * 2;
+                re.y = ((sy - re.y) - sy / 2) / viewSize * 2;
                 return re;
             }
 
@@ -422,7 +426,7 @@ public abstract class GLWindow implements Window, Component {
             }
 
             public Vector2d getDelta() {
-                return getDeltaPix().div(screenSize.toVector2d());
+                return getDeltaPix().mul(INV_Y).div(screenSize.toVector2d());
             }
 
             @Override

@@ -1,6 +1,7 @@
 package org.glcf2.models;
 
 import org.glcf2.Texture;
+import org.glcf2.programobject.ProgramObjct;
 import org.glcf2.programobject.VBO;
 import org.glcf2.vertex.ArrayModel;
 import org.linear.main.matrix.Matrix4f;
@@ -30,7 +31,12 @@ public class GLRawModel extends Model{
     }
 
     @Override
-    public void setColor(VBO colors) {
+    public void setColor(ProgramObjct colors) {
+
+    }
+
+    @Override
+    public void setDrawMode(int mode) {
 
     }
 }

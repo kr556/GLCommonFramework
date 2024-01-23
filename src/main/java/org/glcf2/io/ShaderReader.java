@@ -3,11 +3,11 @@ package org.glcf2.io;
 import java.io.File;
 import java.io.IOException;
 
-public final class ShaderIO {
+public final class ShaderReader {
     private static String vertex = ".vert";
     private static String fragment = ".frag";
 
-    private ShaderIO() {}
+    private ShaderReader() {}
 
     public static String readFragment(String fileName) throws IOException {
         if (!fileName.substring(fragment.length()).equals(fragment)) fileName += fragment;
@@ -15,10 +15,8 @@ public final class ShaderIO {
     }
 
     public static String readFragment(String fileName, ExceptionCatcher<String> ec) {
-        if (!fileName.substring(3).equals(fragment)) fileName += fragment;
-
         try {
-            return TextIO.read(fileName);
+            return readFragment(fileName);
         } catch (IOException e) {
             if (ec == null) return null;
             return ec.invoke(e);
@@ -26,7 +24,8 @@ public final class ShaderIO {
     }
 
     public static String readFragment(File fileName) throws IOException {
-        if (!fileName.getPath().substring(3).equals(fragment)) fileName = new File(fileName.getPath() + fragment);
+        if (!fileName.getPath().substring(3).equals(fragment)) fileName = new File("shader\\glsl\\" + fileName.getPath() + fragment);
+        System.out.println(fileName);
 
         return TextIO.read(fileName);
     }
@@ -58,16 +57,14 @@ public final class ShaderIO {
     }
 
     public static String readVertex(File fileName) throws IOException {
-        if (!fileName.getPath().substring(3).equals(vertex)) fileName = new File(fileName.getPath() + vertex);
+        if (!fileName.getPath().substring(3).equals(vertex)) fileName = new File("shader\\glsl\\" + fileName.getPath() + vertex);
 
         return TextIO.read(fileName);
     }
 
     public static String readVertex(File fileName, ExceptionCatcher<String> ec) {
-        if (!fileName.getPath().substring(3).equals(vertex)) fileName = new File(fileName.getPath() + vertex);
-
         try {
-            return TextIO.read(fileName);
+            return readVertex(fileName);
         } catch (IOException e) {
             if (ec == null) return null;
             return ec.invoke(e);
