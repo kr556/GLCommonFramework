@@ -1,4 +1,5 @@
-import org.glcf2.FragUtil32;
+/*import org.glcf2.FragUtil32;
+import org.glcf2.GLMatrixUtil;
 import org.glcf2.Texture;
 import org.glcf2.UniformNames;
 import org.glcf2.component.Mouse;
@@ -6,94 +7,53 @@ import org.glcf2.component.MouseEvent;
 import org.glcf2.component.glcomponent.GLComponentFactory;
 import org.glcf2.component.glcomponent.GLEventID;
 import org.glcf2.component.glcomponent.GLWindow;
+import org.glcf2.models.Visible;
 import org.glcf2.programobject.IBO;
 import org.glcf2.programobject.VBO;
 import org.glcf2.io.ImageReader;
 import org.glcf2.models.GLVBOModel;
 import org.glcf2.shaders.GLSL;
+import org.glcf2.texture.GLTexture;
 import org.glcf2.vertex.ArrayModel;
-import org.glcf2.vertex.ArrayModelFactory;
-import org.linear.aid.LinearMath;
+import org.glcf2.vertex.ArrayModelFactory;*/
+import org.glcf3.Texture;
+import org.glcf3.gl.GLTexture;
+import org.glcf3.gl.gui.GLAbsRect;
+import org.glcf3.gl.gui.GLButton;
+import org.glcf3.gl.gui.GLWindow;
+
+import org.linear.main.LinearMath;
 import org.linear.main.matrix.Matrix4f;
 import org.linear.main.vector.*;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 
 import static java.lang.Math.*;
 import static org.linear.main.matrix.MatrixUtil.transformation;
-import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class WindowTest {
     private static float size = 0.5f;
+    private static float rot = 0;
     private static Vector2d mpos = new Vector2d();
     private static int mfrag = 0;
 
-    public static void main(String[] args) {
-        GLWindow window = GLComponentFactory.createWindow(GLWindow.DrawingsType.LIST, new Vector2d(0.5, 0.5), "test 2", NULL, NULL, 0);
-        window.init();
+    public static void main(String[] args) throws IOException {
+        GLWindow win = new GLWindow(new Vector4i(100, 100, 1000, 1000), "title");
 
-        Vector<?, ?>[][] verticies = donut(0.7f, 0.1f, 4096, 512);
-//        Vector<?, ?>[][] verticies = cube(1);
+        GLButton gui = new GLButton(-0.5, -0.5, 1, 1) {};
+        Texture tex = GLTexture.read(new File("その他/img_1.png"));
 
-        ArrayModel<Matrix4f, Vector4f> vs = ArrayModelFactory.createVertexModel((Vector4f[]) verticies[0]);
-        var pos =       VBO.create(vs.getVerticies(), 3);
-        var col =       VBO.create((Vector4f[])verticies[1], 4);
-        var idx =       IBO.create((Vector3i[]) verticies[2], 3);
+        gui.setColor(   new Vector4f(.2f, .1f, .5f, 1),
+                new Vector4f(1, .5f, .5f, 1),
+                new Vector4f(.5f, .5f, 1, 1),
+                new Vector4f(.5f, 1, .5f, 1));
 
-        var normals =   VBO.create((Vector4f[]) verticies[3], 3);
+        gui.setTexture(tex);
 
-        GLSL mprg = GLSL.readFile(new File("test"));
+        win.add(gui);
 
-        BufferedImage texImg = ImageReader.read(new File("その他/img_1.png"), e -> null);
-        Texture texture = new Texture(texImg);
-
-        GLVBOModel m = new GLVBOModel(pos, idx, mprg);
-        m.setPrgogram(mprg);
-        m.setVerties(pos);
-        m.setIndicies(idx);
-        m.setTexture(texture);
-        m.setColor(col);
-        m.addVBO(normals);
-
-        GLVBOModel g = ground(-0.5f, 1f);
-        g.setPrgogram(GLSL.read("glcf/component/glsl/button"));
-
-        StringBuilder log = new StringBuilder();
-
-        window.addDrawing(m);
-//        window.addDrawing(g);
-
-        window.setUniform((w, t, ml) -> {
-            mprg.setUniform(UniformNames.TIME, (float) t);
-            mprg.setUniformm(UniformNames.MAT4, new Matrix4f(Matrix4f.DIAGONAL)
-                    .scale(size)
-                    .translate((float) mpos.x * 2, (float) mpos.y * 2, 0)
-                    .rotate(1f * t, new Vector4f(1, 1, 1, 0))
-                    .toNewArray());
-        });
-
-        window.setFrameAction((l, t) -> {
-            Mouse me = window.getEvent().getMouse();
-
-            if (me.invoked()) {
-                if (me.scrolled()) {
-                    size -= (float) (pow(size * 0.7, 2) * me.getScrollY());
-                }
-
-                if (me.moved() && FragUtil32.fragIs(mfrag, MouseEvent.MOUSE_PRESS)) {
-                    me.getEvent();
-                    mpos.add(me.getDelta());
-                    mfrag = FragUtil32.fragSetTrue(mfrag, MouseEvent.MOUSE_PRESS);
-                }
-
-                if (me.getEvent() == GLEventID.event.press()) mfrag = FragUtil32.fragSetTrue(mfrag, MouseEvent.MOUSE_PRESS);
-                if (me.getEvent() == GLEventID.event.release()) mfrag = FragUtil32.fragSetFalse(mfrag, MouseEvent.MOUSE_PRESS);
-            }
-        });
-
-        window.run();
-        window.close();
+        win.run();
     }
 
     public static Vector4f[] plygons(int...xyz) {
@@ -215,14 +175,14 @@ public class WindowTest {
         pols[6] = new Vector4f(-size, -size, -size, 1f);    // left  under front 6
         pols[7] = new Vector4f(size, -size, -size, 1f);     // right under front 7
 
-        colors[0] = new Vector4f(.5f,   1,      1,      1);
-        colors[1] = new Vector4f(.5f,   1,      .5f,    1);
-        colors[2] = new Vector4f(.5f,   .5f,    1,      1);
-        colors[3] = new Vector4f(.5f,   .5f,    .5f,    1);
-        colors[4] = new Vector4f(1,     .5f,    .5f,    1);
-        colors[5] = new Vector4f(1,     .5f,    .5f,    1);
-        colors[6] = new Vector4f(.2f,   1,      .5f,    1);
-        colors[7] = new Vector4f(1,     .2f,    .5f,    1);
+        colors[0] = new Vector4f(.5f,   1,      1,      0.5f);
+        colors[1] = new Vector4f(.5f,   1,      .5f,    0.5f);
+        colors[2] = new Vector4f(.5f,   .5f,    1,      0.5f);
+        colors[3] = new Vector4f(.5f,   .5f,    .5f,    0.5f);
+        colors[4] = new Vector4f(1,     .5f,    .5f,    0.5f);
+        colors[5] = new Vector4f(1,     .5f,    .5f,    0.5f);
+        colors[6] = new Vector4f(.2f,   1,      .5f,    0.5f);
+        colors[7] = new Vector4f(1,     .2f,    .5f,    0.5f);
 
         idx[0] = new Vector3i(0, 1, 2); //top face
         idx[1] = new Vector3i(2, 3, 0);
@@ -263,30 +223,6 @@ public class WindowTest {
             re[i].nomalize();
             re[i].w = 1;
         }
-
-        return re;
-    }
-
-    public static GLVBOModel ground(float h, float size) {
-        var arrM = ArrayModelFactory.createVertexModel(new Vector4f[]{
-                new Vector4f(-size, h, 0, 1),
-                new Vector4f(size, h, 0, 1),
-                new Vector4f(size + 0.1f, h, size * 10, 1),
-                new Vector4f(-size + 0.1f, h, size * 10, 1),
-        });
-
-        var idx = IBO.create(new Vector3i[]{
-                new Vector3i(0, 1, 2),
-                new Vector3i(2, 3, 0)
-        }, 3);
-
-        GLVBOModel re = new GLVBOModel(VBO.create(arrM.getVerticies(), 3), idx, GLSL.read("glcf/component/glsl/button"));
-        re.setColor(VBO.create(new Vector4f[]{
-                new Vector4f(.5f, .5f, .5f, 1),
-                new Vector4f(.5f, .5f, .5f, 1),
-                new Vector4f(.5f, .5f, .5f, 1),
-                new Vector4f(.5f, .5f, .5f, 1)
-        }, 4));
 
         return re;
     }

@@ -4,17 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Test {
+    int i;
+
     public static void main(final String[] args) throws Exception {
-        List<KTTest> lkt = new ArrayList<>();
-        List<KTT_Java_C> lktj = new ArrayList<>();
+        Integer i = 0;
 
-        for (int i = 0; i < 100; i++) {
-            lkt.add(new KTTest("testKT" + i, KTTestKt.createID()));
-            lktj.add(new KTT_Java_C("testKT_J" + i, KTT_Java_C.createID()));
-        }
 
-        lkt.forEach(System.out::println);
-        lktj.forEach(System.out::println);
+        System.out.println(getT().equals(i.getClass()));
+    }
+
+    public static Class<? extends Number> getT() {
+        return Integer.class;
     }
 }
 

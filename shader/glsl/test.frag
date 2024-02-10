@@ -13,6 +13,11 @@ varying vec3 tex_normal;
 void main(void){
     vec4 color = tex_colors;
     //    vec4 color = texture2D(sampler, tex_coods);
+    float r = color.x * time * 10;
+    float g = color.y * time * 10;
+    float b = color.z * time * 10;
+    float a = color.w;
+    color = vec4(vec3(sin(r * 0.4), sin(g * 0.5334), cos(b * 0.144)), a);
 
-    gl_FragColor = color;
+    gl_FragColor = tex_colors;
 }
