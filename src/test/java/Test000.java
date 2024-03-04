@@ -21,19 +21,10 @@ public class Test000 {
         Attribute[] atts = vao.attributes();
         shader.compile(vao);
 
-        Model m = new Model(vao) {
-            @Override
-            public void drawing() {
-                shader.use();
-
-                vao.draw(GL_TRIANGLES);
-
-                shader.disuse();
-            }
-        };
+        Model m = new Model(vao);
         m.setDrawMode(GL_TRIANGLES);
         m.setShader(shader);
-        m.setTexture(texture);
+        m.setTexture(texture, "samp");
 
         w.add(m);
         w.run();
