@@ -1,18 +1,33 @@
-import org.glcf.main.VAO;
 import org.glcf.main.*;
+import org.linear.main.vector.Vector4f;
 
-import javax.imageio.ImageIO;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL11.*;
 
-public class Test000 {
+public final class StaticTest {
+    static VAO vao;
+    static VFShader shader;
+
     public static void main(String[] args) throws Exception {
-        Window w = new Window();
-        VFShader shader = shader();
+        Window win = new Window();
+
+        init();
+        win.setBackground(new Vector4f(.5f, .2f, .5f, 1f));
+
+        win.add(() -> {
+            shader.use();
+
+            vao.draw(GL_TRIANGLES);
+        });
+
+        win.run();
+    }
+
+    static void init() throws IOException {
+        shader = getShader();
 
         VBO pos = new VBO();
         pos.attach(
@@ -35,34 +50,20 @@ public class Test000 {
                 2, 3, 0
         );
 
-        VAO vao = new VAO(2);
+        vao = new VAO(2);
+
         vao.attach(0, pos, new Attribute(3, GL_FLOAT, 0, false, "pos"));
         vao.attach(1, color, new Attribute(4, GL_FLOAT, 0, false, "color"));
+
         vao.setFragdata(new Attribute(4, GL_FLOAT, 0, false, "glColor"));
+
         vao.attach(ibo);
 
-        Attribute[] atts = vao.attributes();
         shader.compile(vao);
-
-        Model m = new Model(vao) {
-            @Override
-            public void drawing() {
-                shader.use();
-
-                vao.bind();
-
-                ibo.bind();
-                glDrawElements(GL_LINE_LOOP, ibo.length(), GL_UNSIGNED_INT, ibo.id());
-
-                vao.unbind();
-            }
-        };
-
-        w.add(m);
-        w.run();
     }
 
-    public static VFShader shader() {
+
+    public static VFShader getShader() {
         StringBuilder v = new StringBuilder();
         StringBuilder f = new StringBuilder();
         try (BufferedReader vin = new BufferedReader(new InputStreamReader(Test000.class.getResourceAsStream("glcf/gl/a.vert")));

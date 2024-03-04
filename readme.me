@@ -1,0 +1,21 @@
+# GLCF
+
+### 初期化処理
+
+最初に、Windowクラスのコンストラクタを走らせて初期化する必要があります。Windowを表示するためには、runメソッドを使用します。<br>
+これは
+```java
+Window window = new Window();
+
+window.run();
+```
+Windowに表示できるオブジェクトはすべてDrawingを実装しています。
+Windowに表示できるオブジェクトを表示するには、add(...)で追加します。
+```java
+Drawing model = new Drawig() {
+    @Override
+    public void drawing() {...}
+}
+
+window.add(model);
+```
