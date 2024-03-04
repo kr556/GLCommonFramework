@@ -13,6 +13,7 @@ public class Test000 {
     public static void main(String[] args) throws Exception {
         Window w = new Window();
         VFShader shader = shader();
+        Texture texture = new Texture(ImageIO.read(new File("C:/Users/nanac/画像/背景とか/GFamvg7b0AARtIv-c.jpg")));
 
         VBO pos = new VBO();
         pos.attach(
@@ -44,19 +45,10 @@ public class Test000 {
         Attribute[] atts = vao.attributes();
         shader.compile(vao);
 
-        Model m = new Model(vao) {
-            @Override
-            public void drawing() {
-                shader.use();
-
-                vao.bind();
-
-                ibo.bind();
-                glDrawElements(GL_LINE_LOOP, ibo.length(), GL_UNSIGNED_INT, ibo.id());
-
-                vao.unbind();
-            }
-        };
+        Model m = new Model(vao);
+        m.setDrawMode(GL_TRIANGLES);
+        m.setShader(shader);
+        m.setTexture(texture);
 
         w.add(m);
         w.run();

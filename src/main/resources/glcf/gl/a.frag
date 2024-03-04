@@ -1,7 +1,5 @@
 #version 150 core
 
-//in sampler2D samler;
-
 in vec4 vColor;
 
 out vec4 glColor;
