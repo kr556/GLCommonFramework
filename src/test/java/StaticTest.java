@@ -1,4 +1,5 @@
 import org.glcf.main.*;
+import org.glcf.main.gui.Window;
 import org.linear.main.vector.Vector4f;
 
 import java.io.BufferedReader;
@@ -17,11 +18,11 @@ public final class StaticTest {
         init();
         win.setBackground(new Vector4f(.5f, .2f, .5f, 1f));
 
-        win.add(() -> {
-            shader.use();
-
-            vao.draw(GL_TRIANGLES);
-        });
+//        win.add(() -> {
+//            shader.use();
+//
+//            vao.draw(GL_TRIANGLES);
+//        });
 
         win.run();
     }
