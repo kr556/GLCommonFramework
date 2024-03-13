@@ -1,4 +1,4 @@
-#version 150 core
+#version 430 core
 
 uniform sampler2D samp;
 
@@ -8,5 +8,5 @@ in vec2 vTex;
 out vec4 glColor;
 
 void main() {
-    glColor = texture(samp, vTex);
+    glColor = vColor;
 }

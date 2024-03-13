@@ -1,6 +1,6 @@
-#version 150 core
+#version 430 core
 
-in vec4 vColor;
+in vec4 wColor;
 
 out vec4 glColor;
 

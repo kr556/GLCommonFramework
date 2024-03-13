@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
 
 public final class StaticTest {
     static VAO vao;
@@ -53,12 +54,19 @@ public final class StaticTest {
 
         vao = new VAO(2);
 
-        vao.attach(0, pos, new Attribute(3, GL_FLOAT, 0, false, "pos"));
-        vao.attach(1, color, new Attribute(4, GL_FLOAT, 0, false, "color"));
+        vao.attach(0, pos, new GLAttribute(3, GL_FLOAT, false, "pos"));
+        vao.attach(1, color, new GLAttribute(4, GL_FLOAT, false, "color"));
 
-        vao.setFragdata(new Attribute(4, GL_FLOAT, 0, false, "glColor"));
+        vao.setFragdata(new GLAttribute(4, GL_FLOAT, false, "glColor"));
 
         vao.attach(ibo);
+
+        vao.bind();
+        pos.bind();
+        glVertexAttribPointer(0, 4, GL_FLOAT, false, 4, 0);
+
+        pos.bind();
+        glVertexAttribPointer(1, 4, GL_FLOAT, false, 4, 12);
 
         shader.compile(vao);
     }
@@ -67,8 +75,8 @@ public final class StaticTest {
     public static VFShader getShader() {
         StringBuilder v = new StringBuilder();
         StringBuilder f = new StringBuilder();
-        try (BufferedReader vin = new BufferedReader(new InputStreamReader(Test000.class.getResourceAsStream("glcf/gl/a.vert")));
-             BufferedReader fin = new BufferedReader(new InputStreamReader(Test000.class.getResourceAsStream("glcf/gl/a.frag")))) {
+        try (BufferedReader vin = new BufferedReader(new InputStreamReader(Test000.class.getResourceAsStream("glcf/gl/a.vs")));
+             BufferedReader fin = new BufferedReader(new InputStreamReader(Test000.class.getResourceAsStream("glcf/gl/a.fs")))) {
             vin.lines().forEach(l -> v.append("\n").append(l));
             fin.lines().forEach(l -> f.append("\n").append(l));
         } catch (IOException e) {
