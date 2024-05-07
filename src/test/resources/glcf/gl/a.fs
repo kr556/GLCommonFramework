@@ -9,4 +9,3 @@ out vec4 glColor;
 void main() {
     glColor = vColor * vec4(1);
 }
-
