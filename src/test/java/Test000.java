@@ -1,6 +1,7 @@
 import org.glcf.main.VAO;
 import org.glcf.main.*;
 import org.glcf.main.Window;
+import org.glcf.main.gui.GLColor;
 import org.glcf.util.ModelUtils;
 import org.linear.main.matrix.Matrix4f;
 import org.linear.main.vector.Vector4f;
@@ -29,7 +30,7 @@ public class Test000 {
 
         Model m = new Model(vao);
 //        m.setDrawMode(GL_POINTS);
-        m.setDrawMode(GL_TRIANGLES);
+        m.setDrawMode(DrawMode.GL_TRIANGLES);
         m.setShader(shader);
 //        m.setTexture(texture, "samp");
         m.setShaderUniform((s, t) -> {
@@ -55,7 +56,7 @@ public class Test000 {
 //        w.add(m1);
 
 //        w.setBackground(new Vector4f(.5f, .2f, .5f, 1));
-        w.set().background(new Vector4f(0));
+        w.set().background(new GLColor(new Vector4f(0)));
         w.run();
     }
 

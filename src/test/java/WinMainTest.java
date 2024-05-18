@@ -16,7 +16,7 @@ import static java.lang.Math.*;
 
 public class WinMainTest extends WindowMain {
     static {
-        WindowMain.registEntryPoint(new WinMainTest());
+        WindowMain.registerEntryPoint(new WinMainTest());
     }
 
     float div = 0.0f;
@@ -33,7 +33,7 @@ public class WinMainTest extends WindowMain {
 
         Model m = new Model(v);
         m.setShader(shader);
-        m.setDrawMode(GL11.GL_LINE_STRIP);
+        m.setDrawMode(DrawMode.GL_LINE_STRIP);
         m.setRoot(window);
         m.setShaderUniform((s, t) -> {
             s.setUniformm("world", Matrix4f.DIAGONAL.clone()
